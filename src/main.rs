@@ -1,13 +1,11 @@
 extern crate amethyst;
 
 use amethyst::core::transform::TransformBundle;
-use amethyst::input::{is_close_requested, is_key_down};
 use amethyst::prelude::*;
-use amethyst::renderer::{DisplayConfig, DrawFlat, Event, KeyboardInput,
-                         Pipeline, PosTex, RenderBundle, Stage,
-                         VirtualKeyCode, WindowEvent};
+use amethyst::renderer::{DisplayConfig, DrawFlat, Pipeline, PosTex, RenderBundle, Stage};
 
 mod pong;
+mod systems;
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
@@ -23,11 +21,23 @@ fn main() -> amethyst::Result<()> {
             .with_pass(DrawFlat::<PosTex>::new()),
     );
 
+    use amethyst::input::InputBundle;
+
+    let binding_path = format!(
+        "{}/resources/bindings_config.ron",
+        env!("CARGO_MANIFEST_DIR")
+    );
+
+    let input_bundle = InputBundle::<String, String>::new().with_bindings_from_file(binding_path)?;
+
+    // in the run() function
     let game_data = GameDataBuilder::default()
         .with_bundle(TransformBundle::new())?
-        .with_basic_renderer(path, DrawFlat::<PosTex>::new(), false)?;
-    let mut game = Application::new("./", Pong, game_data)?;
-    game.run();
+        .with_bundle(RenderBundle::new(pipe, Some(config)))?
+        .with_bundle(input_bundle)?
+        .with(systems::PaddleSystem, "paddle_system", &["input_system"]);
+
+    Application::new("./", Pong, game_data)?.run();
     Ok(())
 }
 

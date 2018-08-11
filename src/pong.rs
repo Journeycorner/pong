@@ -11,10 +11,10 @@ use amethyst::renderer::{
 
 pub struct Pong;
 
-const ARENA_HEIGHT: f32 = 100.0;
-const ARENA_WIDTH: f32 = 100.0;
-const PADDLE_HEIGHT: f32 = 16.0;
-const PADDLE_WIDTH: f32 = 4.0;
+pub const ARENA_HEIGHT: f32 = 100.0;
+pub const ARENA_WIDTH: f32 = 100.0;
+pub const PADDLE_HEIGHT: f32 = 16.0;
+pub const PADDLE_WIDTH: f32 = 4.0;
 const SPRITESHEET_SIZE: (f32, f32) = (8.0, 16.0);
 
 impl<'a, 'b> State<GameData<'a, 'b>> for Pong {
@@ -54,12 +54,12 @@ impl<'a, 'b> State<GameData<'a, 'b>> for Pong {
 }
 
 #[derive(PartialEq, Eq)]
-enum Side {
+pub enum Side {
     Left,
     Right,
 }
 
-struct Paddle {
+pub struct Paddle {
     pub side: Side,
     pub width: f32,
     pub height: f32,
